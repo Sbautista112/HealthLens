@@ -1,13 +1,33 @@
-import { Text, View, StyleSheet, Image, ScrollView, Dimensions, StatusBar } from "react-native";
+import { Text, View, StyleSheet, Image, ScrollView, Dimensions, ActivityIndicator } from "react-native";
+import { useState, useEffect } from 'react';
+import { getImagesFromFirebase } from "@/uploadImage";
 
 export default function History() {
   const screenHeight = Dimensions.get('window').height;
+  const [images, setImages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const fetchedImages = await getImagesFromFirebase();
+        console.log('Fetched images:', fetchedImages);
+        setImages(fetchedImages);
+      } catch (error) {
+        console.error('Error loading images:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadImages();
+  }, []); // Empty dependency array - only runs once
+
   return (
     <View style={styles.container}>
       <View style={styles.profileSection}>
         <Text style={styles.title}>User's Name</Text>
-        <Text style={styles.subtitle}>Based on your recent results, you most likely have x disease. </Text>
+        <Text style={styles.subtitle}>Based on your recent results, you most likely have x disease.</Text>
       </View>
 
       <View style={styles.confidenceSection}>
@@ -17,13 +37,32 @@ export default function History() {
 
       <View style={styles.historySection}>
         <Text style={styles.historyTitle}>Recent History</Text>
-        <ScrollView style={[styles.historyList, { height: screenHeight * 0.3 }]}>
-          {[1, 2, 3, 4, 5].map((item, index) => (
-            <View key={index} style={styles.component}>
-              <Text style={styles.componentText}>History Item {item}</Text>
-            </View>
-          ))}
-        </ScrollView>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
+        ) : images.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyText}>No images yet. Take your first photo!</Text>
+          </View>
+        ) : (
+          <ScrollView style={[styles.historyList, { height: screenHeight * 0.3 }]}>
+            {images.map((item, index) => (
+              <View key={item.id || index} style={styles.component}>
+                <Image 
+                  source={{ uri: item.imageUrl }} 
+                  style={styles.thumbnail}
+                />
+                <View style={styles.componentInfo}>
+                  <Text style={styles.componentText}>
+                    {new Date(item.timestamp?.seconds * 1000).toLocaleDateString()}
+                  </Text>
+                  <Text style={styles.componentSubtext}>
+                    {new Date(item.timestamp?.seconds * 1000).toLocaleTimeString()}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
+        )}
       </View>
     </View>
   );
@@ -71,22 +110,51 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 8,
     padding: 10,
-    height: 250, // Fixed height instead of percentage
   },
   component: {
     backgroundColor: '#DEDCDC',
     width: '100%',
-    padding: 24,
-    borderRadius: 4,
+    padding: 12,
+    borderRadius: 8,
     marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  thumbnail: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginRight: 15,
+    backgroundColor: '#ccc',
+  },
+  componentInfo: {
+    flex: 1,
   },
   componentText: {
     fontSize: 16,
     color: '#333',
+    fontWeight: '600',
+  },
+  componentSubtext: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 4,
   },
   confidenceBar: {
     width: '100%',
     backgroundColor: '#E0D7D7',
     height: 30,
-  }
+  },
+  loader: {
+    marginTop: 20,
+  },
+  emptyState: {
+    padding: 40,
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+  },
 });

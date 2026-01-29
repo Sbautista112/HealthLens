@@ -5,7 +5,7 @@ import { collection, addDoc, getDocs, query, orderBy, Timestamp } from "firebase
 export const uploadImageToFirebase = async (uri: string) => {
     try {
         /** Converting uri into blob. uri is the string the points to the location of where the picture is being stored.
-         * Blob is the actual raw image data. This is done since firebase can't just use the uri. */ 
+         * Blob is the actual raw image data. This is done since firebase can't just use the uri. */
         const response = await fetch(uri);
         const blob = await response.blob();
 
@@ -21,7 +21,7 @@ export const uploadImageToFirebase = async (uri: string) => {
 
         // Saving meta data to Firestore.
         const docRef = await addDoc(collection(db, 'diagnoses'), {
-            imageURL: downloadURL,
+            imageUrl: downloadURL,  // Changed from imageURL to imageUrl (lowercase 'u')
             timestamp: new Date(),
             filename: filename,
             analyzed: false,
@@ -33,7 +33,7 @@ export const uploadImageToFirebase = async (uri: string) => {
             docId: docRef.id,
         };
     } catch (error) {
-        console.error ('Error uploading image:', error);
+        console.error('Error uploading image:', error);
         return {
             success: false,
             error: error,
@@ -42,7 +42,7 @@ export const uploadImageToFirebase = async (uri: string) => {
 };
 
 export const getImagesFromFirebase = async () => {
-    try{
+    try {
         const q = query(collection(db, 'diagnoses'), orderBy('timestamp', 'desc'))
         const querySnapshot = await getDocs(q);
 

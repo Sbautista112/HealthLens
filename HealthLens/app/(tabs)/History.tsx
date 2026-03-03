@@ -1,62 +1,107 @@
-import { Text, View, StyleSheet, Image, ScrollView, Dimensions, ActivityIndicator } from "react-native";
-import { useState, useEffect } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
+import { useState, useEffect } from "react";
 import { getImagesFromFirebase } from "@/uploadImage";
 
 export default function History() {
-  const screenHeight = Dimensions.get('window').height;
+  const screenHeight = Dimensions.get("window").height;
   const [images, setImages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     const loadImages = async () => {
       try {
         const fetchedImages = await getImagesFromFirebase();
-        console.log('Fetched images:', fetchedImages);
+        console.log("Fetched images:", fetchedImages);
         setImages(fetchedImages);
       } catch (error) {
-        console.error('Error loading images:', error);
+        console.error("Error loading images:", error);
       } finally {
         setLoading(false);
       }
     };
 
     loadImages();
-  }, []); // Empty dependency array - only runs once
+  }, []);
+
+  const formatDate = (timestamp: any) => {
+    if (!timestamp) return "Unknown date";
+
+    // Firestore Timestamp
+    if (timestamp.seconds) {
+      return new Date(timestamp.seconds * 1000).toLocaleDateString();
+    }
+
+    // JS Date fallback
+    if (timestamp instanceof Date) {
+      return timestamp.toLocaleDateString();
+    }
+
+    return "Unknown date";
+  };
+
+  const formatTime = (timestamp: any) => {
+    if (!timestamp) return "";
+
+    if (timestamp.seconds) {
+      return new Date(timestamp.seconds * 1000).toLocaleTimeString();
+    }
+
+    if (timestamp instanceof Date) {
+      return timestamp.toLocaleTimeString();
+    }
+
+    return "";
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.profileSection}>
         <Text style={styles.title}>User's Name</Text>
-        <Text style={styles.subtitle}>Based on your recent results, you most likely have x disease.</Text>
+        <Text style={styles.subtitle}>
+          Based on your recent results, you most likely have x disease.
+        </Text>
       </View>
 
       <View style={styles.confidenceSection}>
         <Text>Confidence (X%)</Text>
-        <View style={styles.confidenceBar}></View>
+        <View style={styles.confidenceBar} />
       </View>
 
       <View style={styles.historySection}>
         <Text style={styles.historyTitle}>Recent History</Text>
+
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
         ) : images.length === 0 ? (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyText}>No images yet. Take your first photo!</Text>
+            <Text style={styles.emptyText}>
+              No images yet. Take your first photo!
+            </Text>
           </View>
         ) : (
-          <ScrollView style={[styles.historyList, { height: screenHeight * 0.3 }]}>
+          <ScrollView
+            style={[styles.historyList, { height: screenHeight * 0.3 }]}
+          >
             {images.map((item, index) => (
               <View key={item.id || index} style={styles.component}>
-                <Image 
-                  source={{ uri: item.imageUrl }} 
+                <Image
+                  source={{ uri: item.imageUrl }}
                   style={styles.thumbnail}
                 />
                 <View style={styles.componentInfo}>
                   <Text style={styles.componentText}>
-                    {new Date(item.timestamp?.seconds * 1000).toLocaleDateString()}
+                    {formatDate(item.timestamp)}
                   </Text>
                   <Text style={styles.componentSubtext}>
-                    {new Date(item.timestamp?.seconds * 1000).toLocaleTimeString()}
+                    {formatTime(item.timestamp)}
                   </Text>
                 </View>
               </View>
@@ -67,6 +112,7 @@ export default function History() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

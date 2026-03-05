@@ -15,13 +15,18 @@ Project Structure:
 
 HealthLens/
 ├── ml/
-│   ├── scripts/
-│   │   └── train.py
-│   ├── models/
-│   └── Data/
-├── requirements.txt
-├── .gitignore
-└── README.md
+    ├── scripts/
+        └── train.py
+        └── requirements.txt
+        └── README.mde
+    ├── models/
+        └── best_model.pth
+        └── accuracy_vs_epochs.png
+        └── loss_vs_epochs.png
+        └── best_config.txt
+    ├── Data/
+        ├── ISIC_2019_CSVs/
+        ├── ISIC_2019_Processed/
 
 The training pipeline automatically saves:
 - Best model weights

@@ -6,6 +6,7 @@ export default function TabLayout() {
       <Tabs.Screen name="Diagnose" options={{ headerShown: false }} />
       <Tabs.Screen name="History" options={{ headerShown: false }} />
       <Tabs.Screen name="Profile" options={{ headerShown: false }} />
+      <Tabs.Screen name = "Recommendations" options = {{ headerShown: false}} />
       <Tabs.Screen 
         name="(settings)" 
         options={{ 

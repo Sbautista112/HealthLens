@@ -1,10 +1,10 @@
 import { Text, View, StyleSheet, TouchableOpacity, Alert, Platform } from "react-native";
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import { useState, useRef } from 'react';
-import PhotoPreviewSection from "../PhotoPreviewSection";
+import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import { useState, useRef } from "react";
+import PhotoPreviewSection from "./PhotoPreviewSection";
 
 export default function Diagnose() {
-  const [facing, setFacing] = useState<CameraType>('front');
+  const [facing, setFacing] = useState<CameraType>("front");
   const [permission, requestPermission] = useCameraPermissions();
   const [photo, setPhoto] = useState<any>(null);
   const [showCamera, setShowCamera] = useState(false);
@@ -15,7 +15,7 @@ export default function Diagnose() {
     if (!permission || !permission.granted) {
       const result = await requestPermission();
       if (!result || !result.granted) {
-        Alert.alert('Permission Denied', 'Camera permission is required to take photos.');
+        Alert.alert("Permission Denied", "Camera permission is required to take photos.");
         return;
       }
     }
@@ -32,15 +32,15 @@ export default function Diagnose() {
           exif: false,
         };
         const takenPhoto = await cameraRef.current.takePictureAsync(options);
-        console.log('Photo taken:', takenPhoto);
+        console.log("Photo taken:", takenPhoto);
         setPhoto(takenPhoto);
         setShowCamera(false);
       } catch (error) {
-        console.error('Error taking photo:', error);
-        Alert.alert('Error', 'Failed to take photo: ' + (error as Error).message);
+        console.error("Error taking photo:", error);
+        Alert.alert("Error", "Failed to take photo: " + (error as Error).message);
       }
     } else {
-      Alert.alert('Error', 'Camera is not ready. Please try again.');
+      Alert.alert("Error", "Camera is not ready. Please try again.");
     }
   };
 
@@ -55,13 +55,13 @@ export default function Diagnose() {
   };
 
   const handleCameraReady = () => {
-    console.log('Camera is ready');
+    console.log("Camera is ready");
     setCameraError(null);
   };
 
   const handleCameraError = (error: any) => {
-    console.error('Camera error:', error);
-    setCameraError('Camera failed to start. Please check permissions and try again.');
+    console.error("Camera error:", error);
+    setCameraError("Camera failed to start. Please check permissions and try again.");
   };
 
   if (photo) {
@@ -80,10 +80,7 @@ export default function Diagnose() {
         {cameraError ? (
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>{cameraError}</Text>
-            <TouchableOpacity
-              style={styles.redButton}
-              onPress={() => setShowCamera(false)}
-            >
+            <TouchableOpacity style={styles.redButton} onPress={() => setShowCamera(false)}>
               <Text style={styles.buttonText}>Go Back</Text>
             </TouchableOpacity>
           </View>
@@ -99,16 +96,10 @@ export default function Diagnose() {
               />
             </View>
             <View style={styles.cameraButtonContainer}>
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setShowCamera(false)}
-              >
+              <TouchableOpacity style={styles.cancelButton} onPress={() => setShowCamera(false)}>
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.captureButton}
-                onPress={handleTakePhoto}
-              >
+              <TouchableOpacity style={styles.captureButton} onPress={handleTakePhoto}>
                 <View style={styles.captureButtonInner} />
               </TouchableOpacity>
             </View>
@@ -121,16 +112,11 @@ export default function Diagnose() {
   return (
     <View style={styles.container}>
       <Text style={styles.welcomeText}>Ready to take a photo?</Text>
-      <TouchableOpacity
-        style={styles.redButton}
-        onPress={handleStartCamera}
-      >
+      <TouchableOpacity style={styles.redButton} onPress={handleStartCamera}>
         <Text style={styles.buttonText}>Take Pic</Text>
       </TouchableOpacity>
-      {Platform.OS === 'web' && (
-        <Text style={styles.hintText}>
-          Make sure to allow camera access when prompted
-        </Text>
+      {Platform.OS === "web" && (
+        <Text style={styles.hintText}>Make sure to allow camera access when prompted</Text>
       )}
     </View>
   );
@@ -139,68 +125,68 @@ export default function Diagnose() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
     padding: 20,
   },
   welcomeText: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginBottom: 30,
-    textAlign: 'center',
+    textAlign: "center",
   },
   hintText: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginTop: 20,
-    textAlign: 'center',
+    textAlign: "center",
     paddingHorizontal: 40,
   },
   redButton: {
-    backgroundColor: '#e74c3c',
+    backgroundColor: "#e74c3c",
     paddingHorizontal: 50,
     paddingVertical: 20,
     borderRadius: 15,
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
   buttonText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   cameraContainer: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: "#000",
   },
   cameraWrapper: {
     flex: 1,
-    width: '100%',
-    maxWidth: Platform.OS === 'web' ? 800 : '100%',
-    alignSelf: 'center',
+    width: "100%",
+    maxWidth: Platform.OS === "web" ? 800 : "100%",
+    alignSelf: "center",
   },
   camera: {
     flex: 1,
-    width: '100%',
+    width: "100%",
   },
   cameraButtonContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 40,
     left: 0,
     right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
     paddingHorizontal: 20,
   },
   cancelButton: {
-    backgroundColor: 'rgba(255,255,255,0.3)',
+    backgroundColor: "rgba(255,255,255,0.3)",
     paddingHorizontal: 30,
     paddingVertical: 15,
     borderRadius: 10,
@@ -209,29 +195,29 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(255,255,255,0.3)",
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 4,
-    borderColor: '#fff',
+    borderColor: "#fff",
   },
   captureButtonInner: {
     width: 68,
     height: 68,
     borderRadius: 34,
-    backgroundColor: '#e74c3c',
+    backgroundColor: "#e74c3c",
   },
   errorContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000",
     padding: 20,
   },
   errorText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 30,
   },
 });

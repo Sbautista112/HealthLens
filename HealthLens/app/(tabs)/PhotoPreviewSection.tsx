@@ -3,7 +3,7 @@ import { CameraCapturedPicture } from "expo-camera";
 import React, { useState } from "react";
 import { TouchableOpacity, Image, StyleSheet, View, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { uploadImageToFirebase } from "@/uploadImage";
+import { uploadImageToFirebase } from "@/api/uploadImage";
 
 const PhotoPreviewSection = ({
   photo,
@@ -23,7 +23,7 @@ const PhotoPreviewSection = ({
     try {
       await uploadImageToFirebase(photo.uri);
       Alert.alert("Success", "Image uploaded successfully");
-      onUploadComplete(); 
+      onUploadComplete();
     } catch {
       Alert.alert("Error", "Upload failed");
       setUploading(false);
@@ -33,11 +33,7 @@ const PhotoPreviewSection = ({
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.box}>
-        <Image
-          source={{ uri: photo.uri }}
-          style={styles.previewContainer}
-          resizeMode="contain"
-        />
+        <Image source={{ uri: photo.uri }} style={styles.previewContainer} resizeMode="contain" />
       </View>
 
       <View style={styles.buttonContainer}>

@@ -1,13 +1,6 @@
-import { storage, db } from "../HealthLens/firebaseConfig";
+import { storage, db } from "../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy,
-  Timestamp,
-} from "firebase/firestore";
+import { collection, addDoc, getDocs, query, orderBy, Timestamp } from "firebase/firestore";
 
 export const uploadImageToFirebase = async (uri: string) => {
   try {
@@ -43,14 +36,11 @@ export const uploadImageToFirebase = async (uri: string) => {
 };
 
 export const getImagesFromFirebase = async () => {
-  const q = query(
-    collection(db, "diagnoses"),
-    orderBy("timestamp", "desc")
-  );
+  const q = query(collection(db, "diagnoses"), orderBy("timestamp", "desc"));
 
   const snapshot = await getDocs(q);
 
-  return snapshot.docs.map(doc => ({
+  return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   }));

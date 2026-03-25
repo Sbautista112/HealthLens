@@ -1,14 +1,6 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  ScrollView,
-  Dimensions,
-  ActivityIndicator,
-} from "react-native";
+import { Text, View, StyleSheet, Image, ScrollView, Dimensions, ActivityIndicator } from "react-native";
 import { useState, useEffect } from "react";
-import { getImagesFromFirebase } from "@/uploadImage";
+import { getImagesFromFirebase } from "@/api/uploadImage";
 
 export default function History() {
   const screenHeight = Dimensions.get("window").height;
@@ -65,9 +57,7 @@ export default function History() {
     <View style={styles.container}>
       <View style={styles.profileSection}>
         <Text style={styles.title}>User's Name</Text>
-        <Text style={styles.subtitle}>
-          Based on your recent results, you most likely have x disease.
-        </Text>
+        <Text style={styles.subtitle}>Based on your recent results, you most likely have x disease.</Text>
       </View>
 
       <View style={styles.confidenceSection}>
@@ -82,27 +72,16 @@ export default function History() {
           <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />
         ) : images.length === 0 ? (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyText}>
-              No images yet. Take your first photo!
-            </Text>
+            <Text style={styles.emptyText}>No images yet. Take your first photo!</Text>
           </View>
         ) : (
-          <ScrollView
-            style={[styles.historyList, { height: screenHeight * 0.3 }]}
-          >
+          <ScrollView style={[styles.historyList, { height: screenHeight * 0.3 }]}>
             {images.map((item, index) => (
               <View key={item.id || index} style={styles.component}>
-                <Image
-                  source={{ uri: item.imageUrl }}
-                  style={styles.thumbnail}
-                />
+                <Image source={{ uri: item.imageUrl }} style={styles.thumbnail} />
                 <View style={styles.componentInfo}>
-                  <Text style={styles.componentText}>
-                    {formatDate(item.timestamp)}
-                  </Text>
-                  <Text style={styles.componentSubtext}>
-                    {formatTime(item.timestamp)}
-                  </Text>
+                  <Text style={styles.componentText}>{formatDate(item.timestamp)}</Text>
+                  <Text style={styles.componentSubtext}>{formatTime(item.timestamp)}</Text>
                 </View>
               </View>
             ))}
@@ -113,82 +92,81 @@ export default function History() {
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingTop: 60, 
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingTop: 60,
   },
   profileSection: {
-    alignItems: 'center',
-    marginBottom: 20, 
+    alignItems: "center",
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     padding: 10,
   },
   subtitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   confidenceSection: {
-    alignItems: 'center',
-    width: '100%',
+    alignItems: "center",
+    width: "100%",
     marginBottom: 20,
   },
   historySection: {
-    alignItems: 'center',
-    width: '100%',
-    flex: 1, 
+    alignItems: "center",
+    width: "100%",
+    flex: 1,
   },
   historyTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 10,
   },
   historyList: {
-    backgroundColor: '#E0D7D7',
-    width: '100%',
+    backgroundColor: "#E0D7D7",
+    width: "100%",
     borderRadius: 8,
     padding: 10,
   },
   component: {
-    backgroundColor: '#DEDCDC',
-    width: '100%',
+    backgroundColor: "#DEDCDC",
+    width: "100%",
     padding: 12,
     borderRadius: 8,
     marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   thumbnail: {
     width: 60,
     height: 60,
     borderRadius: 30,
     marginRight: 15,
-    backgroundColor: '#ccc',
+    backgroundColor: "#ccc",
   },
   componentInfo: {
     flex: 1,
   },
   componentText: {
     fontSize: 16,
-    color: '#333',
-    fontWeight: '600',
+    color: "#333",
+    fontWeight: "600",
   },
   componentSubtext: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginTop: 4,
   },
   confidenceBar: {
-    width: '100%',
-    backgroundColor: '#E0D7D7',
+    width: "100%",
+    backgroundColor: "#E0D7D7",
     height: 30,
   },
   loader: {
@@ -196,11 +174,11 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     padding: 40,
-    alignItems: 'center',
+    alignItems: "center",
   },
   emptyText: {
     fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
   },
 });

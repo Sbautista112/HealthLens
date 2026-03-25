@@ -1,24 +1,23 @@
-import { Text, View, StyleSheet, TextInput, Button, } from "react-native";
-import { Link, router } from 'expo-router';
-import React, { useState } from 'react';
+import { Text, View, StyleSheet, TextInput, Button } from "react-native";
+import { Link, router } from "expo-router";
+import React, { useState } from "react";
 // Auth Imports
-import { auth } from '../firebaseConfig';
+import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Index() {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const signIn = async () => {
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
-      if (user) router.push('/(tabs)/Diagnose');
+      if (user) router.push("/(tabs)/Diagnose");
     } catch (error: any) {
-      console.log(error)
-      alert('Sign in failed: ' + error.message);
+      console.log(error);
+      alert("Sign in failed: " + error.message);
     }
-  }
+  };
 
   return (
     <View style={styles.overallContainer}>
@@ -26,7 +25,6 @@ export default function Index() {
         <Text style={styles.header}>HealthLens</Text>
         <Text style={styles.signIn}>Sign In</Text>
         <View style={styles.loginBox}>
-
           <TextInput
             style={styles.input}
             placeholder="Email"
@@ -43,16 +41,17 @@ export default function Index() {
             autoComplete="current-password"
           ></TextInput>
 
-          <Button
-            title="Sign in"
-            onPress={signIn}
-          ></Button>
+          <Button title="Sign in" onPress={signIn}></Button>
         </View>
       </View>
 
       <View style={styles.footer}>
-        <Link href={'/forgot_password'} style={styles.help}>Forgot password?</Link>
-        <Link href={'/create_account'} style={styles.help}>No account? Create one!</Link>
+        <Link href={"/forgot_password"} style={styles.help}>
+          Forgot password?
+        </Link>
+        <Link href={"/create_account"} style={styles.help}>
+          No account? Create one!
+        </Link>
       </View>
     </View>
   );
@@ -75,7 +74,7 @@ const styles = StyleSheet.create({
 
   loginBox: {
     padding: 10,
-    width: '65%',
+    width: "65%",
   },
 
   signIn: {
@@ -99,5 +98,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
     padding: 10,
     fontWeight: "bold",
-  }
-})
+  },
+});
